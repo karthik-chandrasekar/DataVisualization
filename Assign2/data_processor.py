@@ -6,6 +6,9 @@ class DataProcessor:
         self.player_to_wincount_map = {}
         self.player_to_total_matches_map = {}
         self.player_to_lostcount_map = {}    
+        self.player_to_stats_map = {}
+        self.player_to_country_map = {}
+        self.rounds_list = ["final", "semi", "quarter", "fourth", "third", "second", "first"]
 
     def run_main(self):
         with open('11yearAUSOpenMatches.csv') as fp:
@@ -23,7 +26,13 @@ class DataProcessor:
                         win_count = self.player_to_wincount_map.get(player_name, 0)
                         win_count += 1
                         self.player_to_wincount_map[player_name] = win_count
-                       
+                      
+                        round_info = ctuple[0].strip().lower()
+                        stats_map = self.player_to_stats_map.setdefault(player_name, {})
+                        round_count = stats_map.get(round_info, 0)
+                        round_count += 1
+                        stats_map[round_info] = round_count 
+
                         player_1 = ctuple[5].strip().lower()
                         player_2 = ctuple[6].strip().lower()
 
@@ -35,10 +44,16 @@ class DataProcessor:
                         match_count += 1
                         self.player_to_total_matches_map[player_2] = match_count
 
+                        player_1_country = ctuple[7].strip().lower()
+                        player_2_country = ctuple[8].strip().lower()
+
+                        self.player_to_country_map[player_1] = player_1_country
+                        self.player_to_country_map[player_2] = player_2_country
+                
         
         sorted_win = sorted(self.player_to_wincount_map.items(), key=operator.itemgetter(1), reverse=True)[:25]
         print sorted_win
-        self.dump_data(sorted_win, "won_match_stats.csv")
+        self.dump_player_stats(sorted_win, "won_match_stats.csv")
         
 
         sorted_played = sorted(self.player_to_total_matches_map.items(), key=operator.itemgetter(1), reverse=True)[:25]
@@ -48,9 +63,7 @@ class DataProcessor:
 
         for player,total_match_count in self.player_to_total_matches_map.iteritems():
             win_count = self.player_to_wincount_map.get(player, 0)
-            if win_count == 0:
-                continue
-
+            
             lost_count = total_match_count - win_count
             self.player_to_lostcount_map[player] = lost_count
 
@@ -59,12 +72,33 @@ class DataProcessor:
         self.dump_data(sorted_win, "lost_match_stats.csv")
 
 
-
     def dump_data(self, output, filename):
         with open(filename, 'w') as fp:
             fp.write("%s,%s\n" % ("Name","Stat"))
             for out in output: 
                 fp.write("%s,%s\n" % (out[0],out[1]))
+
+    def dump_player_stats(self, output, filename):
+        with open(filename, 'w') as fp:
+            stats_header = ",".join(self.rounds_list)
+            fp.write("%s,%s,%s,%s,%s,%s\n" % ("PlayerName","Country","Wins","Total","Lost",stats_header))
+            for out in output:
+                 
+                output_str = ""
+                player_name = out[0]
+                win_count = out[1]
+                total_count = self.player_to_total_matches_map.get(player_name)
+                lost_count = total_count - win_count 
+                country = self.player_to_country_map.get(player_name)
+                stats_map = self.player_to_stats_map.get(player_name)
+                for round_name in self.rounds_list:
+                    round_info = str(stats_map.get(round_name, 0))    
+                    output_str = output_str + ',' + round_info
+                
+                output_str = output_str.strip(',')               
+
+                fp.write("%s,%s,%s,%s,%s,%s\n" % (player_name, country, win_count, total_count, lost_count, output_str))
+
 
 if __name__ == "__main__":
     dp_obj = DataProcessor()
