@@ -105,7 +105,7 @@ class DataProcessor:
         initials_list = []
         names = player_name.split(" ")
         for name in names:
-            initials_list.append(name[0].upper())
+            initials_list.append(name[:2].upper())
         return ".".join(initials_list)    
     
 
