@@ -85,7 +85,7 @@ var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return "<table border='0' style='width:100%;color:red'><tr><td>"+d.wins+"</td></tr><tr><td>"+d.title+"</td></tr><tr><td>"+d.petname+"</td></tr></table>";
+    return "<table border='0' style='width:100%;color:red'><tr><td>PlayerName: "+d.PlayerName+"</td></tr><tr><td>Country: "+d.Country+"</td></tr><tr><td>Wins: "+d.Wins+"</td></tr><tr><td>Total Match: "+d.Total+"</td></tr><tr><td>Lost: "+d.Lost+"</td></tr><tr><td>Final-Round: "+d.final+"</td></tr><tr><td>Semi-Final-Round: "+d.semi+"</td></tr><tr><td>Quarter-Final-Round: "+d.quarter+"</td></tr><tr><td>Fourth-Round: "+d.fourth+"</td></tr><tr><td>Third-Round: "+d.third+"</td></tr><tr><td>Second-Round: "+d.second+"</td></tr><tr><td>First-Round: "+d.first+"</td></tr></table>";
   })
 
 var svg = d3.select("body").append("svg")
@@ -96,9 +96,9 @@ var svg = d3.select("body").append("svg")
 
 svg.call(tip);
 
-d3.csv("data.csv", type, function(error, data) {
-  x.domain(data.map(function(d) { return d.letter; }));
-  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+d3.csv("stats_data.csv", type, function(error, data) {
+  x.domain(data.map(function(d) { return d.Initials; }));
+  y.domain([0, d3.max(data, function(d) { return d.Wins; })]);
 
   svg.append("g")
       .attr("class", "x axis")
@@ -119,17 +119,17 @@ d3.csv("data.csv", type, function(error, data) {
       .data(data)
     .enter().append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.letter); })
+      .attr("x", function(d) { return x(d.Initials); })
       .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.frequency); })
-      .attr("height", function(d) { return height - y(d.frequency); })
+      .attr("y", function(d) { return y(d.Wins); })
+      .attr("height", function(d) { return height - y(d.Wins); })
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
 
 });
 
 function type(d) {
-  d.frequency = +d.frequency;
+  d.Wins = +d.Wins;
   return d;
 }
 

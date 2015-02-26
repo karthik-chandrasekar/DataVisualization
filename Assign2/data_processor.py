@@ -53,7 +53,7 @@ class DataProcessor:
         
         sorted_win = sorted(self.player_to_wincount_map.items(), key=operator.itemgetter(1), reverse=True)[:25]
         print sorted_win
-        self.dump_player_stats(sorted_win, "won_match_stats.csv")
+        self.dump_player_stats(sorted_win, "stats_data.csv")
         
 
         sorted_played = sorted(self.player_to_total_matches_map.items(), key=operator.itemgetter(1), reverse=True)[:25]
@@ -81,11 +81,12 @@ class DataProcessor:
     def dump_player_stats(self, output, filename):
         with open(filename, 'w') as fp:
             stats_header = ",".join(self.rounds_list)
-            fp.write("%s,%s,%s,%s,%s,%s\n" % ("PlayerName","Country","Wins","Total","Lost",stats_header))
+            fp.write("%s,%s,%s,%s,%s,%s,%s\n" % ("Initials","PlayerName","Country","Wins","Total","Lost",stats_header))
             for out in output:
                  
                 output_str = ""
                 player_name = out[0]
+                initials = self.get_initials(player_name)
                 win_count = out[1]
                 total_count = self.player_to_total_matches_map.get(player_name)
                 lost_count = total_count - win_count 
@@ -97,8 +98,16 @@ class DataProcessor:
                 
                 output_str = output_str.strip(',')               
 
-                fp.write("%s,%s,%s,%s,%s,%s\n" % (player_name, country, win_count, total_count, lost_count, output_str))
+                fp.write("%s,%s,%s,%s,%s,%s,%s\n" % (initials, player_name, country, win_count, total_count, lost_count, output_str))
 
+
+    def get_initials(self, player_name):
+        initials_list = []
+        names = player_name.split(" ")
+        for name in names:
+            initials_list.append(name[0].upper())
+        return ".".join(initials_list)    
+    
 
 if __name__ == "__main__":
     dp_obj = DataProcessor()
