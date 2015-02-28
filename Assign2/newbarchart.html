@@ -59,9 +59,9 @@ body {
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script>
 
-var margin = {top: 200, right: 20, bottom: 40, left: 40},
+var margin = {top: 200, right: 20, bottom: 150, left: 100},
     width = 960 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    height = 700 - margin.top - margin.bottom;
 
 
 var x = d3.scale.ordinal()
@@ -82,14 +82,14 @@ var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return "<table border='0' style='width:100%;color:red'><tr><td>PlayerName: "+d.PlayerName+"</td></tr><tr><td>Country: "+d.Country+"</td></tr><tr><td>Wins: "+d.Wins+"</td></tr><tr><td>Total Match: "+d.Total+"</td></tr><tr><td>Lost: "+d.Lost+"</td></tr><tr><td>Final-Round: "+d.final+"</td></tr><tr><td>Semi-Final-Round: "+d.semi+"</td></tr><tr><td>Quarter-Final-Round: "+d.quarter+"</td></tr><tr><td>Fourth-Round: "+d.fourth+"</td></tr><tr><td>Third-Round: "+d.third+"</td></tr><tr><td>Second-Round: "+d.second+"</td></tr><tr><td>First-Round: "+d.first+"</td></tr></table>";
+    return "<table border='0' style='width:100%;color:red'><tr><td>Player Name: "+d.PlayerName+"</td></tr><tr><td>Country: "+d.Country+"</td></tr><tr><td>Granslam wins: "+d.final+"</td></tr><tr><td>Total Wins: "+d.Wins+"</td></tr><tr><td>Total Matches Played: "+d.Total+"</td></tr><tr><td>Total Defeats: "+d.Lost+"</td></tr><tr><td>Semi Final Wins: "+d.semi+"</td></tr><tr><td>Quarter Final Wins: "+d.quarter+"</td></tr><tr><td>Fourth Round Wins: "+d.fourth+"</td></tr><tr><td>Third Round Wins: "+d.third+"</td></tr><tr><td>Second Round Wins: "+d.second+"</td></tr><tr><td>First Round Wins: "+d.first+"</td></tr></table>";
   })
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
 svg.call(tip);
 
@@ -103,8 +103,8 @@ d3.csv("stats_data.csv", type, function(error, data) {
       .call(xAxis)
       .append("text")
       .attr("x",500)
-      .attr("y",30)
-      .style("text-anchor", "end")
+      .attr("y",40)
+      .style("text-anchor", "middle")
       .style("font-size","16px")
       .text("Players Name");
 
@@ -131,6 +131,14 @@ d3.csv("stats_data.csv", type, function(error, data) {
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
 
+  svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Performance of Players in Australian Open in last 11 years");
+    
 });
 
 function type(d) {

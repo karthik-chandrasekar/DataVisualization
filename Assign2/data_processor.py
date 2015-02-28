@@ -83,7 +83,6 @@ class DataProcessor:
             stats_header = ",".join(self.rounds_list)
             fp.write("%s,%s,%s,%s,%s,%s,%s\n" % ("Initials","PlayerName","Country","Wins","Total","Lost",stats_header))
             for out in output:
-                 
                 output_str = ""
                 player_name = out[0]
                 initials = self.get_initials(player_name)
@@ -98,12 +97,12 @@ class DataProcessor:
                 
                 output_str = output_str.strip(',')               
 
-                fp.write("%s,%s,%s,%s,%s,%s,%s\n" % (initials, player_name, country, win_count, total_count, lost_count, output_str))
+                fp.write("%s,%s,%s,%s,%s,%s,%s\n" % (initials, player_name.upper(), country.upper(), win_count, total_count, lost_count, output_str))
 
 
     def get_initials(self, player_name):
         initials_list = []
-        names = player_name.split(" ")
+        names = player_name.split(" ")[:2]
         for name in names:
             initials_list.append(name[:2].upper())
         return ".".join(initials_list)    
