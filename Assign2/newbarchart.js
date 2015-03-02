@@ -41,7 +41,7 @@ svg.call(tip);
 
 
 d3.csv("stats_data.csv",  function(error, data) {
-  x.domain(data.map(function(d) { return d.Initials; }));
+  x.domain(data.map(function(d) { return d.PlayerName; }));
   y.domain([0, d3.max(data, function(d) { return d.Wins; })]);
 
   // Appending x axis  i
@@ -50,16 +50,16 @@ var hasAxis;
   if (!hasAxis)
 {
   hasAxis = 1;  
-  svg.append("g")
+
+svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis)
-      .append("text")
-      .attr("x",500)
-      .attr("y",40)
-      .style("text-anchor", "middle")
-      .style("font-size","16px")
-      .text("Players Name");
+    .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", "-.55em")
+      .attr("transform", "rotate(-60)" );
 
  //Appending y axis
   var yaxis_obj = svg.append("g")
@@ -78,7 +78,7 @@ var hasAxis;
       .data(data)
     .enter().append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.Initials); })
+      .attr("x", function(d) { return x(d.PlayerName); })
       .attr("width", x.rangeBand())
 
 
