@@ -6,8 +6,8 @@ function bar(flag, flag2)
  d3.selectAll('.text').remove();
 
 var margin = {top: 250, right: 20, bottom: 230, left: 100},
-    width = 960 - margin.left - margin.right,
-    height = 960 - margin.top - margin.bottom;
+    width = 760 - margin.left - margin.right,
+    height = 660 - margin.top - margin.bottom;
 
 
 var x = d3.scale.ordinal()
@@ -148,7 +148,7 @@ svg.append("g")
   //Graph header
   svg.append("text")
         .attr("x", (width / 2))             
-        .attr("y", 0 - (margin.top / 2))
+        .attr("y", 0 - (margin.top / 2 ))
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
         .style("text-decoration", "underline")  
