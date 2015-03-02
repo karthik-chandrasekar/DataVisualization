@@ -5,9 +5,9 @@ function bar(flag, flag2)
  d3.selectAll('.bar').remove();
  d3.selectAll('.text').remove();
 
-var margin = {top: 200, right: 20, bottom: 150, left: 100},
+var margin = {top: 250, right: 20, bottom: 230, left: 100},
     width = 960 - margin.left - margin.right,
-    height = 700 - margin.top - margin.bottom;
+    height = 960 - margin.top - margin.bottom;
 
 
 var x = d3.scale.ordinal()
@@ -42,7 +42,24 @@ svg.call(tip);
 
 d3.csv("stats_data.csv",  function(error, data) {
   x.domain(data.map(function(d) { return d.PlayerName; }));
-  y.domain([0, d3.max(data, function(d) { return d.Wins; })]);
+  if (flag == 1)
+    {
+        y.domain([0, d3.max(data, function(d) { return d.final; })]);
+    }
+
+  else if (flag == 2)
+    {
+        y.domain([0, d3.max(data, function(d) { return d.Wins; })]);
+    }
+
+    else if (flag == 3)
+    {
+        y.domain([0, d3.max(data, function(d) { return d.Lost; })]);
+    }
+    else if (flag == 4)
+    {
+        y.domain([0, d3.max(data, function(d) { return d.Total; })]);
+    }
 
   // Appending x axis  i
 var hasAxis;
