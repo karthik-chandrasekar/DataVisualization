@@ -83,7 +83,17 @@ var hasAxis;
 
 
     //Choosing what data to fill on y axis
+
     if (flag == 1)
+    {
+      svg.selectAll(".bar") 
+      .attr("y", function(d) { return y(d.final); })
+      .attr("height", function(d) { return height - y(d.final); })
+      yaxis_obj.text("Total Grandslam of Players");
+    }
+
+
+    if (flag == 2)
     {
       svg.selectAll(".bar") 
       .attr("y", function(d) { return y(d.Wins); })
@@ -91,12 +101,21 @@ var hasAxis;
       yaxis_obj.text("Total Wins of Players");
     }
 
-    else if (flag == 2)
+    else if (flag == 3)
     {
       svg.selectAll(".bar")
       .attr("y", function(d) { return y(d.Lost); })
       .attr("height", function(d) { return height - y(d.Lost); })
       yaxis_obj.text("Total Loses of Players");
+    }
+
+
+    else if (flag == 4)
+    {
+      svg.selectAll(".bar")
+      .attr("y", function(d) { return y(d.Total); })
+      .attr("height", function(d) { return height - y(d.Total); })
+      yaxis_obj.text("Total Matches of Players");
     }
 
 
@@ -117,7 +136,8 @@ var hasAxis;
         .style("font-size", "16px") 
         .style("text-decoration", "underline")  
         .text("Performance of Players in Australian Open in last 11 years");
-}  
+}
+
   
 });
 
@@ -136,6 +156,19 @@ d3.select("#data1")
             flag = 1;
             bar(2, flag)
         }) 
+
+    d3.select("#data3")
+        .on("click", function(d,i) {
+            flag = 1;
+            bar(3, flag)
+        }) 
+
+    d3.select("#data4")
+        .on("click", function(d,i) {
+            flag = 1;
+            bar(4, flag)
+        }) 
+
 
 bar(1, flag)
 }
