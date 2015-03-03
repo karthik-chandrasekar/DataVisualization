@@ -6,7 +6,7 @@ function bar(flag, flag2)
  d3.selectAll('.text').remove();
 
 var margin = {top: 250, right: 20, bottom: 230, left: 100},
-    width = 760 - margin.left - margin.right,
+    width = 1160 - margin.left - margin.right,
     height = 660 - margin.top - margin.bottom;
 
 
@@ -106,7 +106,7 @@ svg.append("g")
       svg.selectAll(".bar") 
       .attr("y", function(d) { return y(d.final); })
       .attr("height", function(d) { return height - y(d.final); })
-      yaxis_obj.text("Total Grandslam of Players");
+      yaxis_obj.text("Total Grand Slam of Players");
     }
 
 
@@ -123,7 +123,7 @@ svg.append("g")
       svg.selectAll(".bar")
       .attr("y", function(d) { return y(d.Lost); })
       .attr("height", function(d) { return height - y(d.Lost); })
-      yaxis_obj.text("Total Loses of Players");
+      yaxis_obj.text("Total Defeats of Players");
     }
 
 
@@ -152,7 +152,7 @@ svg.append("g")
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
         .style("text-decoration", "underline")  
-        .text("Performance of Players in Australian Open in last 11 years");
+        .text("Performance of top players in Australian Open in last 11 years");
 }
 
   
