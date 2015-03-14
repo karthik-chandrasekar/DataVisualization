@@ -39,10 +39,13 @@ class CollectFeatures:
 
            
        for feat in feat_set:
+            import pdb;pdb.set_trace()
             if feat:
-                clean_feat = nltk.word_tokenize(feat.translate(remove_punctuation_map))
-                if clean_feat:
-                    self.feature_set.add(clean_feat[0])
+                for word in feat.split('\n'):
+                    if word:
+                        clean_feat = nltk.word_tokenize(word.translate(remove_punctuation_map))
+                        if clean_feat:
+                            self.feature_set.add(clean_feat[0])
             
        self.feature_set = self.feature_set - self.stopwords_set        
                  
