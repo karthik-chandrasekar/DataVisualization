@@ -52,13 +52,13 @@ class DataProcessor:
                 
         
         sorted_win = sorted(self.player_to_wincount_map.items(), key=operator.itemgetter(1), reverse=True)[:25]
-        print sorted_win
+        #print sorted_win
         self.dump_player_stats(sorted_win, "stats_data.csv")
         
 
         sorted_played = sorted(self.player_to_total_matches_map.items(), key=operator.itemgetter(1), reverse=True)[:25]
-        print sorted_played
-        self.dump_data(sorted_win, "total_match_stats.csv")
+        #print sorted_played
+        #self.dump_data(sorted_win, "total_match_stats.csv")
 
 
         for player,total_match_count in self.player_to_total_matches_map.iteritems():
@@ -68,8 +68,8 @@ class DataProcessor:
             self.player_to_lostcount_map[player] = lost_count
 
         sorted_lost = sorted(self.player_to_lostcount_map.items(), key=operator.itemgetter(1), reverse=True)[:25]
-        print sorted_lost 
-        self.dump_data(sorted_win, "lost_match_stats.csv")
+        #print sorted_lost 
+        #self.dump_data(sorted_win, "lost_match_stats.csv")
 
 
     def dump_data(self, output, filename):
@@ -81,7 +81,7 @@ class DataProcessor:
     def dump_player_stats(self, output, filename):
         with open(filename, 'w') as fp:
             stats_header = ",".join(self.rounds_list)
-            fp.write("%s,%s,%s,%s,%s,%s,%s\n" % ("Initials","PlayerName","Country","Wins","Total","Lost",stats_header))
+            fp.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % ("Initials","PlayerName","Country","Wins","Total","Lost",stats_header, "Success Ratio"))
             for out in output:
                 output_str = ""
                 player_name = out[0]
@@ -96,8 +96,19 @@ class DataProcessor:
                     output_str = output_str + ',' + round_info
                 
                 output_str = output_str.strip(',')               
+                success_ratio = self.getSuccessRatio(stats_map, win_count, total_count, lost_count)
 
-                fp.write("%s,%s,%s,%s,%s,%s,%s\n" % (initials, player_name.upper(), country.upper(), win_count, total_count, lost_count, output_str))
+                fp.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % (initials, player_name.upper(), country.upper(), win_count, total_count, lost_count, output_str, success_ratio))
+
+
+    def getSuccessRatio(self, stats_map, win_count, total_count, lost_count):
+        finals_win = stats_map.get('final',0)
+        finals_count = stats_map.get('semi',0)
+        semi_finals_win = stats_map.get('semi',0)
+        semi_finals_count = stats_map.get('quarter',0)
+
+        succ_fact = win_count/float(total_count) + (finals_win * 0.3) + (finals_count * 0.3) + (semi_finals_win * 0.2) + (semi_finals_count * 0.2)
+        return succ_fact
 
 
     def get_initials(self, player_name):

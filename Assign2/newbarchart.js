@@ -28,7 +28,7 @@ var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return "<table border='0' style='width:100%;color:red'><tr><td>Player Name: "+d.PlayerName+"</td></tr><tr><td>Country: "+d.Country+"</td></tr><tr><td>Granslam wins: "+d.final+"</td></tr><tr><td>Total Wins: "+d.Wins+"</td></tr><tr><td>Total Matches Played: "+d.Total+"</td></tr><tr><td>Total Defeats: "+d.Lost+"</td></tr><tr><td>Semi Final Wins: "+d.semi+"</td></tr><tr><td>Quarter Final Wins: "+d.quarter+"</td></tr><tr><td>Fourth Round Wins: "+d.fourth+"</td></tr><tr><td>Third Round Wins: "+d.third+"</td></tr><tr><td>Second Round Wins: "+d.second+"</td></tr><tr><td>First Round Wins: "+d.first+"</td></tr></table>";
+    return "<table border='0' style='width:100%;color:red'><tr><td>Player Name: "+d.PlayerName+"</td></tr><tr><td>Country: "+d.Country+"</td></tr><tr><td>Granslam wins: "+d.final+"</td></tr><tr><td>Total Wins: "+d.Wins+"</td></tr><tr><td>Total Matches Played: "+d.Total+"</td></tr><tr><td>Total Defeats: "+d.Lost+"</td></tr><tr><td>Semi Final Wins: "+d.semi+"</td></tr><tr><td>Quarter Final Wins: "+d.quarter+"</td></tr><tr><td>Fourth Round Wins: "+d.fourth+"</td></tr><tr><td>Third Round Wins: "+d.third+"</td></tr><tr><td>Second Round Wins: "+d.second+"</td></tr><tr><td>First Round Wins: "+d.first+"</td></tr><tr><td>Success Factor: "+d.success_ratio+"</td></tr></table>";
   })
 
 var svg = d3.select("#svg")
@@ -59,6 +59,10 @@ d3.csv("stats_data.csv",  function(error, data) {
     else if (flag == 4)
     {
         y.domain([0, d3.max(data, function(d) { return d.Total; })]);
+    }
+    else if (flag == 5)
+    {
+        y.domain([0, d3.max(data, function(d) { return d.success_ratio; })]);
     }
 
   // Appending x axis  i
@@ -136,6 +140,15 @@ svg.append("g")
     }
 
 
+    else if (flag == 5)
+    {
+      svg.selectAll(".bar")
+      .attr("y", function(d) { return y(d.success_ratio); })
+      .attr("height", function(d) { return height - y(d.success_ratio); })
+      yaxis_obj.text("Success Factors of Players");
+    }
+
+
       // mouse hover
       svg.selectAll(".bar")
       .on('mouseover', tip.show)
@@ -184,6 +197,13 @@ d3.select("#data1")
         .on("click", function(d,i) {
             flag = 1;
             bar(4, flag)
+        }) 
+
+
+    d3.select("#data5")
+        .on("click", function(d,i) {
+            flag = 1;
+            bar(5, flag)
         }) 
 
 
