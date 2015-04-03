@@ -10,7 +10,7 @@ class CollectTopRatedRes:
         self.sort_on_res_ratings()
 
     def load_top_rated_restaurants(self):
-        with codecs.open('yelp_academic_dataset_business.json', 'r', encoding='utf-8') as f:
+        with codecs.open('phoenix_restaurants.json', 'r', encoding='utf-8') as f:
             count = 0
             for line in f:
                 data = json.loads(line.strip())
