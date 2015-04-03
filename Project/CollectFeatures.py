@@ -6,17 +6,18 @@ from nltk import trigrams
 class CollectFeatures:
     def __init__(self):
         self.bus_id_set = set([])
-        self.feature_set = set([])
+        self.feature_list = []
         self.ready_made_features_list = []
         self.stopwords_set = set(stopwords.words('english'))
         self.feature_index_map = {}
+        self.bus_id_list = []
 
     def main(self):
         self.load_restaurants_bus_ids()
         self.load_features()
         self.load_restaurants_reviews()
         self.dump_features()
-        
+        self.dump_bus_id() 
 
     def load_restaurants_bus_ids(self):
         restaurants_keywords = set(['restaurant', 'restaurants'])
@@ -51,8 +52,9 @@ class CollectFeatures:
                 data = json.loads(line.strip())
                 bus_id = data.get('business_id')
                 if bus_id in self.bus_id_set:
-                    review = set(data.get('text').strip().lower().split(' '))
-                    self.feature_set.add(self.get_feature_vector(review))    
+                    self.bus_id_list.append(bus_id)
+                    #review = set(data.get('text').strip().lower().split(' '))
+                    #self.feature_list.append(self.get_feature_vector(review))    
 
 
     def get_feature_vector(self, review_feat_set):
@@ -121,9 +123,14 @@ class CollectFeatures:
 
     def dump_features(self):
         with codecs.open('phoenix_restaurants_features.txt','w',encoding='utf-8') as f:
-            for feature in self.feature_set:
+            for feature in self.feature_list:
                 f.write(feature+"\n")
-            
+    
+    def dump_bus_id(self):
+        with codecs.open('phoenix_bus_id.txt','w',encoding='utf-8') as f:
+            for bus_id in self.bus_id_list:
+                f.write(bus_id+"\n")            
+ 
 if __name__ == "__main__":
     cf = CollectFeatures()
     cf.main()
