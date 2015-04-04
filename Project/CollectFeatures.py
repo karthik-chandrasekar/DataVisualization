@@ -11,13 +11,17 @@ class CollectFeatures:
         self.stopwords_set = set(stopwords.words('english'))
         self.feature_index_map = {}
         self.bus_id_list = []
+        self.stars_list = []
+        self.year_list = []
 
     def main(self):
         self.load_restaurants_bus_ids()
         self.load_features()
         self.load_restaurants_reviews()
         self.dump_features()
-        self.dump_bus_id() 
+        self.dump_phoenix_feat('phoenix_bus_id.txt', self.bus_id_list) 
+        self.dump_phoenix_feat('phoenix_stars.txt', self.stars_list) 
+        self.dump_phoenix_feat('phoenix_year.txt', self.year_list) 
 
     def load_restaurants_bus_ids(self):
         restaurants_keywords = set(['restaurant', 'restaurants'])
@@ -53,9 +57,12 @@ class CollectFeatures:
                 bus_id = data.get('business_id')
                 if bus_id in self.bus_id_set:
                     self.bus_id_list.append(bus_id)
+                    self.stars_list.append(data.get('stars'))
+                    self.year_list.append(data.get('date').split('-')[0])
                     #review = set(data.get('text').strip().lower().split(' '))
                     #self.feature_list.append(self.get_feature_vector(review))    
 
+        
 
     def get_feature_vector(self, review_feat_set):
         unigram_review_feat_set = set([])       
@@ -126,10 +133,10 @@ class CollectFeatures:
             for feature in self.feature_list:
                 f.write(feature+"\n")
     
-    def dump_bus_id(self):
-        with codecs.open('phoenix_bus_id.txt','w',encoding='utf-8') as f:
-            for bus_id in self.bus_id_list:
-                f.write(bus_id+"\n")            
+    def dump_phoenix_feat(self, filename, out_list):
+        with codecs.open(filename,'w',encoding='utf-8') as f:
+            for bus_id in out_list:
+                f.write(str(bus_id)+"\n")            
  
 if __name__ == "__main__":
     cf = CollectFeatures()
