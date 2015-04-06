@@ -13,6 +13,8 @@ class CollectFeatures:
         self.bus_id_list = []
         self.stars_list = []
         self.year_list = []
+        self.month_list = []
+        self.day_list = []
 
     def main(self):
         self.load_restaurants_bus_ids()
@@ -22,6 +24,8 @@ class CollectFeatures:
         self.dump_phoenix_feat('phoenix_bus_id.txt', self.bus_id_list) 
         self.dump_phoenix_feat('phoenix_stars.txt', self.stars_list) 
         self.dump_phoenix_feat('phoenix_year.txt', self.year_list) 
+        self.dump_phoenix_feat('phoenix_month.txt', self.month_list) 
+        self.dump_phoenix_feat('phoenix_day.txt', self.day_list) 
 
     def load_restaurants_bus_ids(self):
         restaurants_keywords = set(['restaurant', 'restaurants'])
@@ -59,6 +63,8 @@ class CollectFeatures:
                     self.bus_id_list.append(bus_id)
                     self.stars_list.append(data.get('stars'))
                     self.year_list.append(data.get('date').split('-')[0])
+                    self.month_list.append(data.get('date').split('-')[1])
+                    self.day_list.append(data.get('date').split('-')[2])
                     #review = set(data.get('text').strip().lower().split(' '))
                     #self.feature_list.append(self.get_feature_vector(review))    
 

@@ -5,32 +5,25 @@ class BakeLineChartData:
         self.bus_id_list = []
         self.stars_list = []
         self.year_list = []
+        self.month_list = []
+        self.day_list = []
         self.bus_id_to_year_to_ratings_map = {}
 
     def main(self):
-        self.load_bus_id()
-        self.load_stars()
-        self.load_year()
+        self.load_data('phoenix_bus_id.txt', self.bus_id_list)
+        self.load_data('phoenix_stars.txt', self.stars_list)
+        self.load_data('phoenix_year.txt', self.year_list)
+        self.load_data('phoenix_month.txt', self.month_list)
+        self.load_data('phoenix_day.txt', self.day_list)
         self.load_predicted_labels()
         self.dump_json()
 
-    def load_bus_id(self):
-        with codecs.open('phoenix_bus_id.txt','r',encoding='utf-8') as f:
+    def load_data(self, filename, populatelist):
+        with codecs.open(filename,'r',encoding='utf-8') as f:
             for line in f:
                 line = line.strip()
-                self.bus_id_list.append(line)
+                populatelist.append(line)
 
-    def load_stars(self):
-        with codecs.open('phoenix_stars.txt','r',encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
-                self.stars_list.append(line)
-
-    def load_year(self):
-        with codecs.open('phoenix_year.txt','r',encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
-                self.year_list.append(line)
 
     def load_predicted_labels(self):
         with codecs.open('Random_Forest_Predicted_Values.csv', 'r', encoding='utf-8') as f:
@@ -39,7 +32,9 @@ class BakeLineChartData:
                 line = line.strip().split(',')
 
                 year_to_attr_map = self.bus_id_to_year_to_ratings_map.setdefault(self.bus_id_list[count], {})
-                attr_count_map = year_to_attr_map.setdefault(self.year_list[count], {})
+                month_to_attr_map = year_to_attr_map.setdefault(self.year_list[count], {})
+                day_to_attr_map = month_to_attr_map.setdefault(self.month_list[count],{})
+                attr_count_map = day_to_attr_map.setdefault(self.day_list[count],{})
 
                 service = attr_count_map.get('service',0)
                 service += int(line[0])
@@ -58,7 +53,7 @@ class BakeLineChartData:
                 attr_count_map['ambience'] = ambience
             
                 userrating = attr_count_map.get('userrating',0)
-                userrating += int(self.stars_list[count])
+                userrating += int(float(self.stars_list[count])/5)
                 attr_count_map['userrating'] = userrating
 
                 count += 1
