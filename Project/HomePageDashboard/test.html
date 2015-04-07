@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<head>
+    <meta HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EmulateIE9" >
+    <script type="text/javascript" src="scripts/d3.min.js"></script>
+    <script type="text/javascript" src="scripts/radialProgress.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="styles/style.css">
+
+    <style>
+
+        #test .arc2 {
+            stroke-weight:0.1;
+            fill: #3660b0;
+        }
+
+        #outer {
+            background:#FFFFFF;
+            border-radius: 5px;
+            color: #000;
+        }
+
+        #div1, #div2, #div3, #div4, #div5 {
+            width: 20%;
+            height: 150px;
+            box-sizing: border-box;
+            float: left;
+        }
+
+        #div2 .arc {
+            stroke-weight: 0.1;
+            fill: #f0a417;
+        }
+
+        #div2 .arc2 {
+            stroke-weight: 0.1;
+            fill: #b00d08;
+        }
+
+        #div3 .arc {
+            stroke-weight: 0.1;
+            fill: #1d871b;
+        }
+
+        #div4 .arc {
+            stroke-weight: 0.1;
+            fill: #990000;
+        }
+
+        #div5 .arc {
+            stroke-weight: 0.1;
+            fill: #6600CC;
+        }
+
+
+        .selectedRadial {
+            border-radius: 3px;
+            background: #f4f4f4;
+            color: #000;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            border: 1px solid rgba(200,200,200,0.85);
+        }
+
+        #div6, #div7, #div8, #div9{
+            width: 25%;
+            height: 150px;
+            box-sizing: border-box;
+            float: left;
+        }
+
+        .radial {
+            border-radius: 3px;
+            background: #FFFFFF;
+            color: #000;
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+<div id='outer' style="width: 1000px; height:800px; margin: 0px auto; margin-top:20px; padding:10px">
+    <div id="main" style="width:1000px; height:200px; margin: 0px auto; ">
+        <h1 align="center">OVERVIEW OF RESTAURANT METRICS IN PHX</h1>
+        <h2 align="center">Preference of PHX ppl about restaurants</h2>
+        <br/><br/>
+        <div id="div1"></div>
+        <div id="div2"></div>
+        <div id="div3"></div>
+        <div id="div4"></div>
+        <div id="div5"></div>
+        <br/><br/>
+        <h3 align="center">Top restaurants in PHX</h3>
+        <br/><br/>
+        <div id="div6">
+        <h3 align="center">Best in Food</h3>
+        <ul align="center">
+            <li>A</li>
+            <li>B</li>
+            <li>C</li>
+        </ul>
+        </div>
+        <div id="div7">
+        <h3 align="center">Best in Service</h3>
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+        </div>
+        <div id="div8">
+        <h3 align="center">Best in Ambience</h3>
+        <ul>
+            <li>a</li>
+            <li>b</li>
+            <li>c</li>
+        </ul>
+        </div>
+
+        <div id="div9">
+        <h3 align="center">Best in Cost</h3>
+        <ul>
+            <li>c1</li>
+            <li>c2</li>
+            <li>c3</li>
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<script language="JavaScript">
+
+    var div1=d3.select(document.getElementById('div1'));
+    var div2=d3.select(document.getElementById('div2'));
+    var div3=d3.select(document.getElementById('div3'));
+    var div4=d3.select(document.getElementById('div4'));
+    var div5=d3.select(document.getElementById('div5'));
+
+    start();
+
+    function onClick1() {
+        deselect();
+        div1.attr("class","selectedRadial");
+    }
+
+    function onClick2() {
+        deselect();
+        div2.attr("class","selectedRadial");
+    }
+
+    function onClick3() {
+        deselect();
+        div3.attr("class","selectedRadial");
+    }
+
+    function onClick4() {
+        deselect();
+        div4.attr("class","selectedRadial");
+    }
+
+    function onClick5() {
+        deselect();
+        div5.attr("class","selectedRadial");
+    }
+
+
+    function labelFunction(val,min,max) {
+
+    }
+
+    function deselect() {
+        div1.attr("class","radial");
+        div2.attr("class","radial");
+        div3.attr("class","radial");
+        div4.attr("class","radial");
+        div5.attr("class","radial");
+    }
+
+    function start() {
+
+        var rp1 = radialProgress(document.getElementById('div1'))
+                .label("FOOD")
+                .onClick(onClick1)
+                .diameter(150)
+                .value(75)
+                .render();
+
+        var rp2 = radialProgress(document.getElementById('div2'))
+                .label("AMBIENCE")
+                .onClick(onClick2)
+                .diameter(150)
+                .value(55)
+                .render();
+
+        var rp3 = radialProgress(document.getElementById('div3'))
+                .label("QUALITY")
+                .onClick(onClick3)
+                .diameter(150)
+                .minValue(0)
+                .maxValue(100)
+                .value(45)
+                .render();
+
+        var rp4 = radialProgress(document.getElementById('div4'))
+                .label("SERVICE")
+                .onClick(onClick4)
+                .diameter(150)
+                .value(35)
+                .render();
+
+
+        var rp5 = radialProgress(document.getElementById('div5'))
+                .label("USER RATING")
+                .onClick(onClick5)
+                .diameter(150)
+                .value(65)
+                .render();
+    }
+
+</script>
+
+</body>
+</html>
+
