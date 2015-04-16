@@ -15,6 +15,8 @@ class CollectFeatures:
         self.year_list = []
         self.month_list = []
         self.day_list = []
+        self.bus_id_to_categories_map = {}
+        self.categories_list = []
 
     def main(self):
         self.load_restaurants_bus_ids()
@@ -26,6 +28,7 @@ class CollectFeatures:
         self.dump_phoenix_feat('phoenix_year.txt', self.year_list) 
         self.dump_phoenix_feat('phoenix_month.txt', self.month_list) 
         self.dump_phoenix_feat('phoenix_day.txt', self.day_list) 
+        self.dump_phoenix_feat('phoenix_categories.txt', self.categories_list)
 
     def load_restaurants_bus_ids(self):
         restaurants_keywords = set(['restaurant', 'restaurants'])
@@ -38,7 +41,10 @@ class CollectFeatures:
                      categories_set.add(category.strip().lower())
                 if len(categories_set.intersection(restaurants_keywords)) > 0 and data.get('city') == 'Phoenix':
                     self.bus_id_set.add(data.get('business_id').strip())                 
-    
+                    cat_str = ','.join(categories_set) 
+                    self.bus_id_to_categories_map[data.get('business_id')] = cat_str            
+
+ 
 
     def load_features(self):
         with codecs.open('features_list.txt', 'r', encoding='utf-8') as f:
@@ -67,7 +73,7 @@ class CollectFeatures:
                     self.day_list.append(data.get('date').split('-')[2])
                     #review = set(data.get('text').strip().lower().split(' '))
                     #self.feature_list.append(self.get_feature_vector(review))    
-
+                    self.categories_list.append(self.bus_id_to_categories_map.get(bus_id))
         
 
     def get_feature_vector(self, review_feat_set):

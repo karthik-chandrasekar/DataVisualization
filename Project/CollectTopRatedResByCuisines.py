@@ -1,4 +1,4 @@
-import codecs, json
+import codecs, json, operator
 
 class CollectTopRatedResByAttributes:
     def __init__(self):
@@ -50,6 +50,8 @@ class CollectTopRatedResByAttributes:
                
 
     def load_top_rated_by_attr(self):
+        category_popularity_map = {}
+        all_categories_set = set([])
         restaurants_keywords = set(['restaurant', 'restaurants'])
         with codecs.open('phoenix_restaurants.json', 'r', encoding='utf-8') as f:
             for line in f:
@@ -57,8 +59,10 @@ class CollectTopRatedResByAttributes:
                 categories = data.get('categories')
                 categories_set = set([])
                 for category in categories:
-                     categories_set.add(category.strip().lower())
+                     category_val = category.strip().lower()
+                     categories_set.add(category_val)
                 if len(categories_set.intersection(restaurants_keywords)) > 0 and data.get('city') == 'Phoenix':
+                    all_categories_set.update(categories_set)
                     bus_id = data.get('business_id')    
                     ratings_count_map = self.bus_id_to_attr_count_map.get(bus_id, {})
                     if not ratings_count_map:continue
@@ -78,6 +82,16 @@ class CollectTopRatedResByAttributes:
 
                     ambience_tup = (ratings_count_map.get('ambience'), lat, longt, name, bus_id)
                     self.res_by_ambience_tuple_list.append(ambience_tup)
+
+                    for category in categories_set:
+                        pop = category_popularity_map.setdefault(category, 0)
+                        pop += 1
+                        category_popularity_map[category] = pop
+ 
+
+        #Sort dict based on value
+        popular_categories = sorted(category_popularity_map.items(), key=operator.itemgetter(1), reverse=True)
+        import pdb;pdb.set_trace()
 
 
     def sort_on_attr_val(self):
