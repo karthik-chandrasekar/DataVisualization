@@ -8,6 +8,7 @@ class BakeLineChartData:
         self.month_list = []
         self.day_list = []
         self.bus_id_to_year_to_ratings_map = {}
+        self.category_to_bus_id_to_food_pop = {}
         self.service_total = 0
         self.price_total = 0
         self.food_total = 0
@@ -106,7 +107,8 @@ class BakeLineChartData:
                
                 if match_category:
                     while match_category:
-                        attr_count_map = self.category_to_attr_count_map.setdefault(match_category.pop(), {})
+                        cur_category = match_category.pop()
+                        attr_count_map = self.category_to_attr_count_map.setdefault(cur_category, {})
 
                         service = attr_count_map.get('service',0)
                         service += int(line[0])
@@ -128,6 +130,11 @@ class BakeLineChartData:
                         userrating += int(float(self.stars_list[count])/5)
                         attr_count_map['userrating'] = userrating
 
+                        #Prepare data for cluster association
+                        bus_id_to_food_pop = self.category_to_bus_id_to_food_pop.setdefault(cur_category, {})
+                        food = bus_id_to_food_pop.get(self.bus_id_list[count],0)
+                        food += int(line[2])
+                        bus_id_to_food_pop[self.bus_id_list[count]] = food
 
                 count += 1
 
@@ -139,8 +146,6 @@ class BakeLineChartData:
         print "Food percentage - %s" % (float(self.food_total)/self.total_review)
         print "Ambience percentage - %s" % (float(self.ambience_total)/self.total_review)   
    
-        import pdb;pdb.set_trace()
- 
        
     def dump_json(self):
        json_str = json.dumps(self.bus_id_to_year_to_ratings_map)
@@ -156,6 +161,14 @@ class BakeLineChartData:
        with codecs.open('PhoenixLineChartData.json', 'w', encoding='utf-8') as f:
             f.write(p_json_str)            
          
+
+
+       #Top cuisine restaurants and its food pop
+       import pdb;pdb.set_trace()
+       cui_cluster = json.dumps(self.category_to_bus_id_to_food_pop)
+
+       with codecs.open('CuisineCluster.json', 'w', encoding='utf-8') as f:
+            f.write(cui_cluster) 
 
 
 if __name__ == "__main__":
